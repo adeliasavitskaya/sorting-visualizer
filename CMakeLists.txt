@@ -36,3 +36,12 @@ add_executable(${PROJECT_NAME} ${SOURCES} ${HEADERS})
 target_link_libraries(${PROJECT_NAME} Qt5::Widgets Qt5::Core)
 
 target_include_directories(${PROJECT_NAME} PRIVATE src)
+
+add_executable(tests
+        tests/test_bubble.cpp
+        src/algorithms/bubble_sort.cpp
+        src/core/step_generator.cpp
+)
+
+target_include_directories(tests PRIVATE src tests)
+target_link_libraries(tests Qt5::Widgets Qt5::Core)
