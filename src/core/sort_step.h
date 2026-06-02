@@ -20,6 +20,7 @@ struct SortStep {
 
     int left{-1};
     int right{-1};
+    int level{-1};
     StepType type{StepType::DONE};
 
     std::string description;

@@ -39,9 +39,12 @@ target_include_directories(${PROJECT_NAME} PRIVATE src)
 
 add_executable(tests
         tests/test_bubble.cpp
+        tests/test_merge.cpp
         src/algorithms/bubble_sort.cpp
+        src/algorithms/merge_sort.cpp
         src/core/step_generator.cpp
 )
 
 target_include_directories(tests PRIVATE src tests)
 target_link_libraries(tests Qt5::Widgets Qt5::Core)
+
