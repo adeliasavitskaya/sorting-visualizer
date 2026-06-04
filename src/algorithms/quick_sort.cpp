@@ -1,14 +1,14 @@
 #include <vector>
 #include "core/sort_step.h"
 
-/// @brief Задаёт параметры одного шага сортировки
-/// @param array Состояние массива на текущем шаге
-/// @param l Левая граница подмассива
-/// @param r Правая граница подмассива
-/// @param ind_pvt Индекс опорного элемента
-/// @param lvl Уровень дерева рекурсии
-/// @param type Тип шага
-/// @return Один шаг типа SortStep
+/// @brief Создаёт один шаг быстрой сортировки
+/// @param array Текущее состояние массива
+/// @param l Левая граница активного подмассива
+/// @param r Правая граница активного подмассива
+/// @param ind_pvt Индекс опорного элемента (pivot)
+/// @param lvl Уровень дерева рекурсии (0 — корень)
+/// @param type Тип шага (FIND_PIVOT, SWAP, DONE)
+/// @return Заполненный объект SortStep
 SortStep make_step(const std::vector<int>& array, int l, int r, int ind_pvt, int lvl, StepType type) {
     SortStep s;
     s.array = array;
@@ -20,13 +20,16 @@ SortStep make_step(const std::vector<int>& array, int l, int r, int ind_pvt, int
     return s;
 }
 
-/// @brief Разбивает подмассив на две части относительно pivot
-/// @param arr Массив для разбиения
-/// @param l Левая граница
-/// @param r Правая граница
+/// @brief Разбивает подмассив [l..r] на две части по схеме Ломуто
+/// @details Pivot — правый элемент arr[r]. После выполнения pivot стоит
+/// на своей финальной позиции: все элементы слева меньше или равны ему,
+/// все элементы справа — больше. Записывает шаг SWAP при каждом обмене.
+/// @param arr Массив для разбиения (изменяется на месте)
+/// @param l Левая граница подмассива
+/// @param r Правая граница подмассива (индекс pivot)
 /// @param steps Вектор шагов для записи
 /// @param lvl Уровень рекурсии
-/// @return Финальный индекс границы разбиения
+/// @return Финальный индекс pivot после разбиения
 int partition(std::vector<int>& arr, int l, int r, std::vector<SortStep>& steps, int lvl) {
     int ind_pvt{r};
     int pvt{arr[ind_pvt]};
@@ -45,16 +48,18 @@ int partition(std::vector<int>& arr, int l, int r, std::vector<SortStep>& steps,
     return ind_pvt;
 }
 
-
 /// @brief Рекурсивный помощник быстрой сортировки
-/// @param array Массив для сортировки
+/// @details Записывает шаг FIND_PIVOT, вызывает partition, затем рекурсивно
+/// сортирует левую [l..p-1] и правую [p+1..r] части. Pivot исключается —
+/// сужение диапазона гарантировано.
+/// @param array Массив для сортировки (изменяется на месте)
 /// @param steps Вектор шагов для записи
-/// @param l Левая граница
-/// @param r Правая граница
+/// @param l Левая граница текущего диапазона
+/// @param r Правая граница текущего диапазона
 /// @param lvl Уровень рекурсии
 void quick_sort_helper(std::vector<int>& array, std::vector<SortStep>& steps,
     int l, int r, int lvl) {
-    if (l >= r) {return;}
+    if (l >= r) { return; }
 
     steps.push_back(make_step(array, l, r, r, lvl, StepType::FIND_PIVOT));
 
@@ -63,6 +68,11 @@ void quick_sort_helper(std::vector<int>& array, std::vector<SortStep>& steps,
     quick_sort_helper(array, steps, p+1, r, lvl+1);
 }
 
+/// @brief Быстрая сортировка — публичный интерфейс
+/// @details Возвращает вектор шагов, каждый из которых содержит снимок
+/// массива и метаданные для визуализации. Исходный массив не изменяется.
+/// @param array Входной массив для сортировки
+/// @return Вектор шагов типа SortStep
 std::vector<SortStep> quick_sort(const std::vector<int>& array) {
     std::vector<SortStep> steps;
     std::vector arr = array;
