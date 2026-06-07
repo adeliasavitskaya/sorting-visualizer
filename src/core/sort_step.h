@@ -4,14 +4,10 @@
 #include <vector>
 #include <string>
 
-enum class StepType {
-    COMPARE,
-    SWAP,
-    FIND_PIVOT,
-    MERGE,
-    SPLIT,
-    DONE
-};
+enum class SortType { BUBBLE, MERGE, QUICK };
+
+
+enum class StepType { COMPARE, SWAP, MERGE, SPLIT, FIND_PIVOT, DONE };
 
 struct SortStep {
     std::vector <int> array;
@@ -21,6 +17,7 @@ struct SortStep {
     int left{-1};
     int right{-1};
     int level{-1};
+    int pivot{-1};
     StepType type{StepType::DONE};
 
     std::string description;

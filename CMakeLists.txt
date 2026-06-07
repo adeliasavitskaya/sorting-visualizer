@@ -40,8 +40,11 @@ target_include_directories(${PROJECT_NAME} PRIVATE src)
 add_executable(tests
         tests/test_bubble.cpp
         tests/test_merge.cpp
+        tests/test_quick.cpp
+        tests/test_step_generator.cpp
         src/algorithms/bubble_sort.cpp
         src/algorithms/merge_sort.cpp
+        src/algorithms/quick_sort.cpp
         src/core/step_generator.cpp
 )
 
