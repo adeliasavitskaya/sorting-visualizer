@@ -4,7 +4,6 @@
 #include <sstream>
 
 ArrayInputWidget::ArrayInputWidget(QWidget* parent) : QWidget(parent) {
-
     m_input = new QLineEdit(this);
     m_input->setPlaceholderText("Введите числа через пробел");
 
@@ -14,6 +13,10 @@ ArrayInputWidget::ArrayInputWidget(QWidget* parent) : QWidget(parent) {
     layout->addWidget(m_randomBtn);
     layout->addWidget(m_input);
 
+    connect(m_input, &QLineEdit::textChanged, this, [this] (const QString& text) {
+        std::vector<int> arr;
+        if (validate(text, arr)) emit arrayReady(arr);
+    });
     connect(m_randomBtn, &QPushButton::clicked, this, &ArrayInputWidget::onRandomClicked);
 }
 

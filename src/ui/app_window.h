@@ -21,23 +21,25 @@ public:
     explicit AppWindow(QWidget* parent = nullptr);
 
 private slots:
-    /// @brief Слот — генерирует шаги и запускает автоматический проход
+    ///@brief Слот рисует массив после ввода пользователем
+    void onArrayReady(const std::vector<int>& array);
+    
+    /// @brief Слот генерирует шаги и запускает автоматический проход
     void onStartClicked();
 
-    /// @brief Слот — переходит к следующему шагу
+    /// @brief Слот переходит к следующему шагу
     void onNextClicked();
 
-    /// @brief Слот — возвращается к предыдущему шагу
+    /// @brief Слот возвращается к предыдущему шагу
     void onPrevClicked();
 
-    /// @brief Слот — срабатывает по таймеру, показывает следующий шаг
+    /// @brief Слот срабатывает по таймеру, показывает следующий шаг
     void onTimerTick();
 
 private:
     ArrayInputWidget* m_inputWidget; ///< Виджет ввода массива
 
-    QWidget* m_visualizer; // временно, заменим позже
-    //SortVisualizer* m_visualizer;  ///< Виджет отрисовки шагов
+    SortVisualizer* m_visualizer;  ///< Виджет отрисовки шагов
 
     QComboBox* m_algoBox;     ///< Выпадающий список алгоритмов
     QPushButton* m_startBtn;    ///< Кнопка запуска автопрохода
