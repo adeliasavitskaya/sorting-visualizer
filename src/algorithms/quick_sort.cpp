@@ -9,12 +9,15 @@
 /// @param lvl Уровень дерева рекурсии (0 — корень)
 /// @param type Тип шага (FIND_PIVOT, SWAP, DONE)
 /// @return Заполненный объект SortStep
-SortStep make_step(const std::vector<int>& array, int l, int r, int ind_pvt, int lvl, StepType type) {
+SortStep make_step(const std::vector<int>& array, int l, int r, int first,
+    int second, int ind_pvt, int lvl, StepType type) {
     SortStep s;
     s.array = array;
     s.left = l;
     s.right = r;
     s.pivot = ind_pvt;
+    s.first = first;
+    s.second = second;
     s.level = lvl;
     s.type = type;
     return s;
@@ -23,7 +26,8 @@ SortStep make_step(const std::vector<int>& array, int l, int r, int ind_pvt, int
 /// @brief Разбивает подмассив [l..r] на две части по схеме Ломуто
 /// @details Pivot — правый элемент arr[r]. После выполнения pivot стоит
 /// на своей финальной позиции: все элементы слева меньше или равны ему,
-/// все элементы справа — больше. Записывает шаг SWAP при каждом обмене.
+/// все элементы справа — больше. Записывает шаг COMPARE при каждом сравнении
+/// и шаг SWAP при каждом обмене.
 /// @param arr Массив для разбиения (изменяется на месте)
 /// @param l Левая граница подмассива
 /// @param r Правая граница подмассива (индекс pivot)
@@ -36,14 +40,24 @@ int partition(std::vector<int>& arr, int l, int r, std::vector<SortStep>& steps,
     int i{l - 1};
 
     for (int j{l}; j < r; j++) {
+        SortStep cmp = make_step(arr, l, r, i+1, j, ind_pvt, lvl, StepType::COMPARE);
+        steps.push_back(cmp);
+
         if (arr[j] <= pvt) {
             i++;
             std::swap(arr[i], arr[j]);
-            steps.push_back(make_step(arr, i, j, ind_pvt, lvl, StepType::SWAP));
+            if (i != j) {
+                SortStep s = make_step(arr, l, r, i, j, ind_pvt, lvl, StepType::SWAP);
+                steps.push_back(s);
+            }
         }
     }
+
     std::swap(arr[i+1], arr[ind_pvt]);
-    steps.push_back(make_step(arr, i+1, r, ind_pvt, lvl, StepType::SWAP));
+    if (i+1 != ind_pvt) {  // не записываем если pivot уже на месте
+        SortStep swap_pvt = make_step(arr, l, r, i+1, ind_pvt, ind_pvt, lvl, StepType::SWAP);
+        steps.push_back(swap_pvt);
+    }
     ind_pvt = i + 1;
     return ind_pvt;
 }
@@ -61,7 +75,7 @@ void quick_sort_helper(std::vector<int>& array, std::vector<SortStep>& steps,
     int l, int r, int lvl) {
     if (l >= r) { return; }
 
-    steps.push_back(make_step(array, l, r, r, lvl, StepType::FIND_PIVOT));
+    steps.push_back(make_step(array, l, r, r, -1, -1, lvl, StepType::FIND_PIVOT));
 
     int p = partition(array, l, r, steps, lvl);
     quick_sort_helper(array, steps, l, p-1, lvl+1);
@@ -77,7 +91,7 @@ std::vector<SortStep> quick_sort(const std::vector<int>& array) {
     std::vector<SortStep> steps;
     std::vector arr = array;
     if (array.size() <= 1) {
-        steps.push_back(make_step(arr, 0, 0, 0, 0, StepType::DONE));
+        steps.push_back(make_step(arr, 0, 0, 0, 0, -1, -1, StepType::DONE));
         return steps;
     }
     quick_sort_helper(arr, steps, 0, arr.size()-1, 0);

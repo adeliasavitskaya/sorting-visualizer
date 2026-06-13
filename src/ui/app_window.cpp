@@ -29,31 +29,40 @@ AppWindow::AppWindow(QWidget *parent) : QMainWindow(parent) {
     mainLayout->addLayout(btnLayout);
     mainLayout->addWidget(m_visualizer);
 
-    connect(m_inputWidget, &ArrayInputWidget::arrayReady, this, &AppWindow::onArrayReady);
+    connect(m_inputWidget, &ArrayInputWidget::arrayReady, this,
+        [this](const std::vector<int>&) {resetState();});
 
     connect(m_startBtn, &QPushButton::clicked, this, &AppWindow::onStartClicked);
     connect(m_nextBtn, &QPushButton::clicked, this, &AppWindow::onNextClicked);
     connect(m_prevBtn,  &QPushButton::clicked, this, &AppWindow::onPrevClicked);
 
     connect(m_timer, &QTimer::timeout, this, &AppWindow::onTimerTick);
-}
 
-void AppWindow::onArrayReady(const std::vector<int>& array) {
-    SortStep step;
-    step.array = array;
-    m_visualizer->setStep(step);
+    connect(m_algoBox, QOverload<int>::of(&QComboBox::currentIndexChanged),
+        this, &AppWindow::resetState);
 }
 
 void AppWindow::onStartClicked() {
-    auto array = m_inputWidget->getArray();
-    if (array.empty()) return;
-    int alg_indx = m_algoBox->currentIndex();
-    SortType sort_type = static_cast<SortType>(alg_indx);
+    if (m_timer->isActive()) {
+        m_timer->stop();
+        m_startBtn->setText("Старт");
+    }
+    else {
+        if (m_steps.empty()) {
+            auto array = m_inputWidget->getArray();
+            if (array.empty()) return;
+            int alg_indx = m_algoBox->currentIndex();
+            SortType sort_type = static_cast<SortType>(alg_indx);
 
-    m_steps = generate_steps(array, sort_type);
-    m_currentStep=0;
-    m_visualizer->setStep(m_steps[m_currentStep]);
-    m_timer->start(500);
+            m_steps = generate_steps(array, sort_type);
+            m_currentStep=0;
+            m_visualizer->setStep(m_steps[m_currentStep]);
+        }
+        if (!m_steps.empty()) {
+            m_timer->start(1000);
+            m_startBtn->setText("Пауза");
+        }
+    }
 }
 
 void AppWindow::onNextClicked() {
@@ -76,5 +85,24 @@ void AppWindow::onTimerTick() {
         m_visualizer->setStep(m_steps[m_currentStep]);
     } else {
         m_timer->stop();
+        m_startBtn->setText("Старт");
+        m_steps.clear();
+        m_currentStep = 0;
+    }
+}
+
+void AppWindow::resetState() {
+    m_timer->stop();
+    m_startBtn->setText("Старт");
+    m_currentStep = 0;
+
+    auto array = m_inputWidget->getArray();
+    if (!array.empty()) {
+        int alg_indx = m_algoBox->currentIndex();
+        SortType sort_type = static_cast<SortType>(alg_indx);
+        m_steps = generate_steps(array, sort_type);
+        m_visualizer->setStep(m_steps[0]);
+    } else {
+        m_steps.clear();
     }
 }

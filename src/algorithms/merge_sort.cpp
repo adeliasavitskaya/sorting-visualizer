@@ -5,14 +5,18 @@
 /// @param arr Текущее состояние массива
 /// @param left Левая граница активного диапазона
 /// @param right Правая граница активного диапазона
+/// @param first, second сравниваемые элементы
 /// @param lvl Уровень дерева рекурсии (0 — корень)
 /// @param type Тип шага (SPLIT, MERGE, DONE)
 /// @return Заполненный объект SortStep
-SortStep make_step(const std::vector<int>& arr, int left, int right, int lvl, StepType type) {
+SortStep make_step(const std::vector<int>& arr, int left, int right,
+                   int first, int second, int lvl, StepType type) {
     SortStep step;
     step.array = arr;
     step.left = left;
     step.right = right;
+    step.first = first;
+    step.second = second;
     step.type = type;
     step.level = lvl;
     return step;
@@ -33,7 +37,7 @@ void merge(std::vector<int>& arr, int left, int mid, int right,
     int i{left}, j{mid + 1};
 
     while (i <= mid && j <= right) {
-        steps.push_back(make_step(arr, i, j, lvl, StepType::MERGE));
+        steps.push_back(make_step(arr, left, right, i, j, lvl, StepType::MERGE));
         if (arr[i] < arr[j]) {
             temp.push_back(arr[i]);
             i++;
@@ -48,7 +52,7 @@ void merge(std::vector<int>& arr, int left, int mid, int right,
 
     for (int k{left}; k <= right; k++) { arr[k] = temp[k - left]; }
 
-    steps.push_back(make_step(arr, left, right, lvl, StepType::MERGE));
+    steps.push_back(make_step(arr, left, right, -1, -1, lvl, StepType::MERGE));
 }
 
 /// @brief Рекурсивный помощник сортировки слиянием
@@ -64,7 +68,7 @@ void merge_sort_helper(std::vector<int>& arr, int left, int right,
     if (left >= right) { return; }
 
     int mid = (right - left) / 2 + left;
-    steps.push_back(make_step(arr, left, right, lvl, StepType::SPLIT));
+    steps.push_back(make_step(arr, left, right, left, mid+1, lvl, StepType::SPLIT));
 
     merge_sort_helper(arr, left, mid, steps, lvl + 1);
     merge_sort_helper(arr, mid + 1, right, steps, lvl + 1);
@@ -81,7 +85,7 @@ std::vector<SortStep> merge_sort(const std::vector<int>& array) {
     std::vector<SortStep> steps;
 
     if (arr.size() <= 1) {
-        steps.push_back(make_step(arr, 0, 0, 0, StepType::DONE));
+        steps.push_back(make_step(arr, 0, 0, 0, -1, -1, StepType::DONE));
         return steps;
     }
 

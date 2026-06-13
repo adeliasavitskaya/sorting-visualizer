@@ -2,8 +2,11 @@
 #define ARRAY_INPUT_WIDGET_H
 
 #include <QWidget>
+#include <QTimer>
 #include <QLineEdit>
+#include <QLabel>
 #include <QPushButton>
+#include <QSpinBox>
 #include <vector>
 
 /// @brief Виджет ввода массива для визуализатора сортировок
@@ -35,9 +38,13 @@ private slots:
 private:
     QLineEdit*   m_input;      ///< Поле ввода чисел через пробел
     QPushButton* m_randomBtn;  ///< Кнопка генерации случайного массива
+    QSpinBox* m_sizeSpinBox;   /// < СпинБокс для выбора размера массива
+    QString m_lastValidText; /// < Последний валидный текст
+    QLabel* m_sizeLabel; /// < Лабл для надписи "Размер:"
+    QPushButton* m_clearBtn; /// < Кнопка для очистки поля с числами
 
     /// @brief Проверяет строку ввода и парсит числа
-    /// @details Разбивает строку по пробелам, проверяет что каждый токен —
+    /// @details Разбивает строку по пробелам, проверяет что каждый элемент
     /// целое число, и что длина массива не превышает 20 элементов.
     /// @param text Строка из поля ввода
     /// @param out Вектор куда записываются числа при успехе

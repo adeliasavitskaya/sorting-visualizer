@@ -21,8 +21,6 @@ public:
     explicit AppWindow(QWidget* parent = nullptr);
 
 private slots:
-    ///@brief Слот рисует массив после ввода пользователем
-    void onArrayReady(const std::vector<int>& array);
     
     /// @brief Слот генерирует шаги и запускает автоматический проход
     void onStartClicked();
@@ -49,6 +47,7 @@ private:
 
     std::vector<SortStep> m_steps;   ///< Все шаги текущей сортировки
     int m_currentStep{0};            ///< Индекс текущего шага
+    void resetState();
 };
 
 #endif
