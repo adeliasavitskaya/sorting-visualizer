@@ -35,11 +35,11 @@ int partition(std::vector<int>& arr, int l, int r, std::vector<SortStep>& steps)
         }
     }
 
-    int a{arr[i+1]}, b{arr[ind_pvt]};
+    int pvt_val{arr[ind_pvt]};
     std::swap(arr[i+1], arr[ind_pvt]);
     if (i+1 != ind_pvt) {
         SortStep swap_pvt = make_step(arr, l, r, i+1, ind_pvt, ind_pvt, StepType::SWAP,
-            "Опорный " + std::to_string(a) + " встаёт на место " + std::to_string(i+1));
+            "Опорный " + std::to_string(pvt_val) + " встаёт на место " + std::to_string(i+1));
         steps.push_back(swap_pvt);
     }
     ind_pvt = i + 1;
