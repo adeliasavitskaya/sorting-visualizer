@@ -1,7 +1,6 @@
 #ifndef ARRAY_INPUT_WIDGET_H
 #define ARRAY_INPUT_WIDGET_H
 
-#include <QWidget>
 #include <QTimer>
 #include <QLineEdit>
 #include <QLabel>
@@ -18,7 +17,7 @@ class ArrayInputWidget : public QWidget {
 
 public:
     /// @brief Конструктор виджета
-    /// @param parent Родительский виджет (nullptr для корневого)
+    /// @param parent Родительский виджет
     explicit ArrayInputWidget(QWidget* parent = nullptr);
 
     /// @brief Возвращает текущий массив из поля ввода
@@ -39,9 +38,10 @@ private:
     QLineEdit*   m_input;      ///< Поле ввода чисел через пробел
     QPushButton* m_randomBtn;  ///< Кнопка генерации случайного массива
     QSpinBox* m_sizeSpinBox;   /// < СпинБокс для выбора размера массива
-    QString m_lastValidText; /// < Последний валидный текст
     QLabel* m_sizeLabel; /// < Лабл для надписи "Размер:"
     QPushButton* m_clearBtn; /// < Кнопка для очистки поля с числами
+
+    mutable QString m_lastValidText; /// < Последний валидный текст
 
     /// @brief Проверяет строку ввода и парсит числа
     /// @details Разбивает строку по пробелам, проверяет что каждый элемент

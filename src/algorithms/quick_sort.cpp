@@ -1,27 +1,7 @@
 #include <vector>
 #include "core/sort_step.h"
-
-/// @brief Создаёт один шаг быстрой сортировки
-/// @param array Текущее состояние массива
-/// @param l Левая граница активного подмассива
-/// @param r Правая граница активного подмассива
-/// @param ind_pvt Индекс опорного элемента (pivot)
-/// @param lvl Уровень дерева рекурсии (0 — корень)
-/// @param type Тип шага (FIND_PIVOT, SWAP, DONE)
-/// @return Заполненный объект SortStep
-SortStep make_step(const std::vector<int>& array, int l, int r, int first,
-    int second, int ind_pvt, int lvl, StepType type) {
-    SortStep s;
-    s.array = array;
-    s.left = l;
-    s.right = r;
-    s.pivot = ind_pvt;
-    s.first = first;
-    s.second = second;
-    s.level = lvl;
-    s.type = type;
-    return s;
-}
+#include "core/sort_step_utils.h"
+#include <stdexcept>
 
 /// @brief Разбивает подмассив [l..r] на две части по схеме Ломуто
 /// @details Pivot — правый элемент arr[r]. После выполнения pivot стоит
@@ -32,30 +12,34 @@ SortStep make_step(const std::vector<int>& array, int l, int r, int first,
 /// @param l Левая граница подмассива
 /// @param r Правая граница подмассива (индекс pivot)
 /// @param steps Вектор шагов для записи
-/// @param lvl Уровень рекурсии
 /// @return Финальный индекс pivot после разбиения
-int partition(std::vector<int>& arr, int l, int r, std::vector<SortStep>& steps, int lvl) {
+int partition(std::vector<int>& arr, int l, int r, std::vector<SortStep>& steps) {
     int ind_pvt{r};
     int pvt{arr[ind_pvt]};
     int i{l - 1};
 
     for (int j{l}; j < r; j++) {
-        SortStep cmp = make_step(arr, l, r, i+1, j, ind_pvt, lvl, StepType::COMPARE);
+        SortStep cmp = make_step(arr, l, r, i+1, j, ind_pvt, StepType::COMPARE,
+            "Сравниваем " + std::to_string(arr[j]) + " с опорным " + std::to_string(pvt));
         steps.push_back(cmp);
 
         if (arr[j] <= pvt) {
             i++;
+            int a{arr[i]}, b{arr[j]};
             std::swap(arr[i], arr[j]);
             if (i != j) {
-                SortStep s = make_step(arr, l, r, i, j, ind_pvt, lvl, StepType::SWAP);
+                SortStep s = make_step(arr, l, r, i, j, ind_pvt, StepType::SWAP,
+        "Меняем местами " + std::to_string(a) + " и " + std::to_string(b));
                 steps.push_back(s);
             }
         }
     }
 
+    int a{arr[i+1]}, b{arr[ind_pvt]};
     std::swap(arr[i+1], arr[ind_pvt]);
-    if (i+1 != ind_pvt) {  // не записываем если pivot уже на месте
-        SortStep swap_pvt = make_step(arr, l, r, i+1, ind_pvt, ind_pvt, lvl, StepType::SWAP);
+    if (i+1 != ind_pvt) {
+        SortStep swap_pvt = make_step(arr, l, r, i+1, ind_pvt, ind_pvt, StepType::SWAP,
+            "Опорный " + std::to_string(a) + " встаёт на место " + std::to_string(i+1));
         steps.push_back(swap_pvt);
     }
     ind_pvt = i + 1;
@@ -70,16 +54,16 @@ int partition(std::vector<int>& arr, int l, int r, std::vector<SortStep>& steps,
 /// @param steps Вектор шагов для записи
 /// @param l Левая граница текущего диапазона
 /// @param r Правая граница текущего диапазона
-/// @param lvl Уровень рекурсии
 void quick_sort_helper(std::vector<int>& array, std::vector<SortStep>& steps,
-    int l, int r, int lvl) {
+    int l, int r) {
     if (l >= r) { return; }
 
-    steps.push_back(make_step(array, l, r, r, -1, -1, lvl, StepType::FIND_PIVOT));
+    steps.push_back(make_step(array, l, r, -1, -1, r, StepType::FIND_PIVOT,
+        "Выбираем опорный элемент: " + std::to_string(array[r])));
 
-    int p = partition(array, l, r, steps, lvl);
-    quick_sort_helper(array, steps, l, p-1, lvl+1);
-    quick_sort_helper(array, steps, p+1, r, lvl+1);
+    int p = partition(array, l, r, steps);
+    quick_sort_helper(array, steps, l, p-1);
+    quick_sort_helper(array, steps, p+1, r);
 }
 
 /// @brief Быстрая сортировка — публичный интерфейс
@@ -88,12 +72,15 @@ void quick_sort_helper(std::vector<int>& array, std::vector<SortStep>& steps,
 /// @param array Входной массив для сортировки
 /// @return Вектор шагов типа SortStep
 std::vector<SortStep> quick_sort(const std::vector<int>& array) {
+    if (array.empty()) throw std::invalid_argument("Массив пустой");
     std::vector<SortStep> steps;
     std::vector arr = array;
     if (array.size() <= 1) {
-        steps.push_back(make_step(arr, 0, 0, 0, 0, -1, -1, StepType::DONE));
+        steps.push_back(make_step(arr, -1, -1, -1, -1, -1, StepType::DONE));
         return steps;
     }
-    quick_sort_helper(arr, steps, 0, arr.size()-1, 0);
+    quick_sort_helper(arr, steps, 0, arr.size()-1);
+    steps.push_back(make_step(arr, -1, -1, -1, -1, -1, StepType::DONE,
+        "Массив отсортирован!"));
     return steps;
 }

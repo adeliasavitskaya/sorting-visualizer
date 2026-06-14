@@ -23,6 +23,7 @@ protected:
 
 private:
     SortStep m_step;  /// < текущий шаг для отображения
+    int m_maxVal{0};
 };
 
 #endif

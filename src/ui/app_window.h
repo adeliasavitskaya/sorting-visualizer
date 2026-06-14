@@ -43,7 +43,8 @@ private:
     QPushButton* m_startBtn;    ///< Кнопка запуска автопрохода
     QPushButton* m_nextBtn;     ///< Кнопка следующего шага
     QPushButton* m_prevBtn;     ///< Кнопка предыдущего шага
-    QTimer* m_timer;       ///< Таймер для автоматического прохода
+    QTimer* m_timer;            ///< Таймер для автоматического прохода
+    QLabel* m_descLabel;        ///< Лабл для описания текущего шага
 
     std::vector<SortStep> m_steps;   ///< Все шаги текущей сортировки
     int m_currentStep{0};            ///< Индекс текущего шага

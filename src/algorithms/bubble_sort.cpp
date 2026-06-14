@@ -1,19 +1,6 @@
 #include "bubble_sort.h"
-
-/// @brief Создаёт один шаг сортировки пузырьком
-/// @param arr Текущее состояние массива
-/// @param first Индекс первого сравниваемого элемента
-/// @param second Индекс второго сравниваемого элемента
-/// @param type Тип шага (COMPARE, SWAP, DONE)
-/// @return Заполненный объект SortStep
-SortStep make_step(const std::vector<int>& arr, int first=-1, int second=-1, StepType type=StepType::DONE) {
-    SortStep step;
-    step.array = arr;
-    step.first = first;
-    step.second = second;
-    step.type = type;
-    return step;
-}
+#include "core/sort_step_utils.h"
+#include <stdexcept>
 
 /// @brief Сортировка пузырьком — публичный интерфейс
 /// @details На каждом проходе сравнивает соседние элементы и меняет их местами
@@ -22,32 +9,33 @@ SortStep make_step(const std::vector<int>& arr, int first=-1, int second=-1, Ste
 /// @param array Входной массив для сортировки
 /// @return Вектор шагов типа SortStep
 std::vector<SortStep> bubble_sort(const std::vector<int>& array) {
+    if (array.empty()) throw std::invalid_argument("Массив не может быть пустым");
     std::vector<int> arr = array;
     int n = arr.size();
 
     std::vector<SortStep> steps;
 
     if (n <= 1) {
-        SortStep step = make_step(arr);
-        step.description = "Массив уже отсортирован";
-        steps.push_back(step);
+        steps.push_back(make_step(arr));
         return steps;
     }
 
-    for (int pass{0}; pass < n; pass++) {
-        for (int i{0}; i < n-1; i++) {
-            SortStep step = make_step(arr, i, i+1, StepType::COMPARE);
-            step.description = "Сравниваем элементы " + std::to_string(arr[i]) + " и " + std::to_string(arr[i+1]);
-            steps.push_back(step);
-            if (arr[i] > arr[i + 1]) {
-                std::swap(arr[i], arr[i+1]);
-                SortStep step = make_step(arr, i, i+1, StepType::SWAP);
-                step.description = "Меняем местами элементы " + std::to_string(arr[i]) +
-                    " и " + std::to_string(arr[i+1]);
-                steps.push_back(step);
+    for (int i{0}; i < n; i++) {
+        bool swaped{false};
+        for (int j{0}; j < n-1; j++) {
+            steps.push_back(make_step(arr, -1, -1, j, j+1, -1, StepType::COMPARE,
+                "Сравниваем " + std::to_string(arr[j]) + " и " + std::to_string(arr[j+1])));
+            if (arr[j] > arr[j+1]) {
+                int a{arr[j]}, b{arr[j+1]};
+                std::swap(arr[j], arr[j+1]);
+                steps.push_back(make_step(arr, -1, -1, j, j+1, -1, StepType::SWAP,
+                    "Меняем местами " + std::to_string(a) + " и " + std::to_string(b)));
+                swaped = true;
             }
         }
+        if (!swaped) break;
     }
-
+    steps.push_back(make_step(arr, -1, -1, -1, -1, -1, StepType::DONE,
+        "Массив отсортирован!"));
     return steps;
 }

@@ -2,7 +2,6 @@
 #define SORT_STEP_H
 
 #include <vector>
-#include <string>
 
 enum class SortType { BUBBLE, MERGE, QUICK };
 
@@ -16,10 +15,9 @@ struct SortStep {
 
     int left{-1};
     int right{-1};
-    int level{-1};
+
     int pivot{-1};
     StepType type{StepType::DONE};
-
     std::string description;
 };
 

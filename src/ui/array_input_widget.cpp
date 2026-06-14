@@ -65,7 +65,7 @@ bool ArrayInputWidget::validate(const QString& text, std::vector<int>& out) cons
     }
 
     if (!out.empty() && out.size() <= max_count) {
-        const_cast<ArrayInputWidget*>(this)->m_lastValidText = text;
+        m_lastValidText = text;
     }
 
     return !out.empty();
