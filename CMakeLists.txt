@@ -51,3 +51,5 @@ add_executable(tests
 target_include_directories(tests PRIVATE src tests)
 target_link_libraries(tests Qt5::Widgets Qt5::Core)
 
+enable_testing()
+add_test(NAME unit_tests COMMAND tests)
