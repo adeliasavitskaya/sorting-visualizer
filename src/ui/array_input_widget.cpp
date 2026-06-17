@@ -4,17 +4,18 @@
 
 ArrayInputWidget::ArrayInputWidget(QWidget* parent) : QWidget(parent) {
     m_input = new QLineEdit(this);
-    m_input->setPlaceholderText("Введите числа через пробел");
+    m_input->setPlaceholderText("Enter numbers separated by spaces");
 
-    m_randomBtn = new QPushButton("Случайный массив", this);
+    m_randomBtn = new QPushButton("Random Array", this);
 
     m_sizeSpinBox = new QSpinBox(this);
     m_sizeSpinBox->setRange(1, 30);
     m_sizeSpinBox->setValue(20);
+    m_sizeSpinBox->setButtonSymbols(QAbstractSpinBox::NoButtons);
 
-    m_sizeLabel = new QLabel("Размер:", this);
+    m_sizeLabel = new QLabel("Size:", this);
 
-    m_clearBtn = new QPushButton("✕", this);
+    m_clearBtn = new QPushButton("⌫", this);
     m_clearBtn->setFixedWidth(30);
 
     auto* layout = new QHBoxLayout(this);
@@ -49,6 +50,7 @@ ArrayInputWidget::ArrayInputWidget(QWidget* parent) : QWidget(parent) {
 
     connect(m_clearBtn, &QPushButton::clicked, this, [this]() {
         m_input->clear();
+        emit cleared();
     });
 }
 

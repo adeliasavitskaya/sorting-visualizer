@@ -8,7 +8,7 @@ int main(int argc, char *argv[]) {
         QMainWindow, QWidget {
             background-color: #1e1e2e;
             color: #abb2bf;
-            font-family: 'Helvetica Neue', 'Segoe UI', Arial, sans-serif;
+            font-family: 'Helvetica Neue', Arial;
             font-size: 13px;
         }
 

@@ -19,7 +19,7 @@ void merge(std::vector<int>& arr, int left, int mid, int right,
     while (i <= mid && j <= right) {
         steps.push_back(make_step(arr, left, right, i, j,
             /*pvt=*/-1, StepType::MERGE,
-            "Сравниваем " + std::to_string(arr[i]) + " и " + std::to_string(arr[j])));
+            "Comparing " + std::to_string(arr[i]) + " and " + std::to_string(arr[j])));
         if (arr[i] < arr[j]) {
             temp.push_back(arr[i]);
             i++;
@@ -35,7 +35,7 @@ void merge(std::vector<int>& arr, int left, int mid, int right,
     for (int k{left}; k <= right; k++) {
         arr[k] = temp[k - left];
         steps.push_back(make_step(arr, left, right, k, -1, -1, StepType::MERGE,
-            "Слияние: элемент " + std::to_string(arr[k]) + " на позицию " + std::to_string(k)));
+            "Merging: element " + std::to_string(arr[k]) + " into position " + std::to_string(k)));
     }
 }
 
@@ -53,7 +53,7 @@ void merge_sort_helper(std::vector<int>& arr, int left, int right,
     int mid = (right - left) / 2 + left;
     steps.push_back(make_step(arr, left, right, left, mid+1,
         /*pvt=*/-1, StepType::SPLIT,
-        "Делим массив на две части"));
+        "Splitting array into two halves"));
 
     merge_sort_helper(arr, left, mid, steps);
     merge_sort_helper(arr, mid + 1, right, steps);
@@ -61,7 +61,7 @@ void merge_sort_helper(std::vector<int>& arr, int left, int right,
 }
 
 std::vector<SortStep> merge_sort(const std::vector<int>& array) {
-    if (array.empty()) throw std::invalid_argument("Массив пустой");
+    if (array.empty()) throw std::invalid_argument("Array is empty");
     std::vector<int> arr = array;
     std::vector<SortStep> steps;
 
@@ -72,6 +72,6 @@ std::vector<SortStep> merge_sort(const std::vector<int>& array) {
 
     merge_sort_helper(arr, 0, arr.size() - 1, steps);
     steps.push_back(make_step(arr, -1, -1, -1, -1, -1, StepType::DONE,
-        "Массив отсортирован!"));
+        "Array sorted!"));
     return steps;
 }

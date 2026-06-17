@@ -7,19 +7,25 @@ SortVisualizer::SortVisualizer(QWidget* parent) : QWidget(parent) {
 }
 
 void SortVisualizer::setStep(const SortStep& step) {
-    if (m_step.array.empty() || m_step.array.size() != step.array.size()) {
+    if (!step.array.empty()) {
         m_maxVal = *std::max_element(step.array.begin(), step.array.end());
     }
     m_step = step;
     update();
 }
 
-void SortVisualizer::paintEvent(QPaintEvent* event) {
-    if (m_step.array.empty()) return;
-    if (m_maxVal == 0) return;
+void SortVisualizer::clear() {
+    m_step = SortStep{};
+    m_maxVal = 0;
+    update();
+}
 
+void SortVisualizer::paintEvent(QPaintEvent* event) {
     QPainter painter(this);
     painter.fillRect(rect(), QColor("#1e1e2e"));
+
+    if (m_step.array.empty()) return;
+    if (m_maxVal == 0) return;
 
     int n = m_step.array.size();
     int barWidth{width() / n};

@@ -5,13 +5,13 @@
 #include "core/step_generator.h"
 
 AppWindow::AppWindow(QWidget *parent) : QMainWindow(parent) {
-    m_startBtn = new QPushButton("Старт", this);
-    m_nextBtn  = new QPushButton("Вперёд", this);
-    m_prevBtn  = new QPushButton("Назад", this);
+    m_startBtn = new QPushButton("Start", this);
+    m_nextBtn  = new QPushButton("Next", this);
+    m_prevBtn  = new QPushButton("Back", this);
     m_algoBox = new QComboBox(this);
-    m_algoBox->addItem("Пузырёк");
-    m_algoBox->addItem("Слияние");
-    m_algoBox->addItem("Быстрая");
+    m_algoBox->addItem("Bubble");
+    m_algoBox->addItem("Merge");
+    m_algoBox->addItem("Quick");
     m_timer = new QTimer(this);
     m_visualizer = new SortVisualizer(this);
     m_inputWidget = new ArrayInputWidget(this);
@@ -37,6 +37,15 @@ AppWindow::AppWindow(QWidget *parent) : QMainWindow(parent) {
     connect(m_inputWidget, &ArrayInputWidget::arrayReady, this,
         [this](const std::vector<int>&) {resetState();});
 
+    connect(m_inputWidget, &ArrayInputWidget::cleared, this, [this]() {
+        m_timer->stop();
+        m_startBtn->setText("Start");
+        m_steps.clear();
+        m_currentStep = 0;
+        m_descLabel->clear();
+        m_visualizer->clear();
+    });
+
     connect(m_startBtn, &QPushButton::clicked, this, &AppWindow::onStartClicked);
     connect(m_nextBtn, &QPushButton::clicked, this, &AppWindow::onNextClicked);
     connect(m_prevBtn,  &QPushButton::clicked, this, &AppWindow::onPrevClicked);
@@ -50,7 +59,7 @@ AppWindow::AppWindow(QWidget *parent) : QMainWindow(parent) {
 void AppWindow::onStartClicked() {
     if (m_timer->isActive()) {
         m_timer->stop();
-        m_startBtn->setText("Старт");
+        m_startBtn->setText("Start");
     }
     else {
         if (m_steps.empty()) {
@@ -62,7 +71,7 @@ void AppWindow::onStartClicked() {
             try {
                 m_steps = generate_steps(array, sort_type);
             } catch (const std::invalid_argument& e) {
-                QMessageBox::critical(this, "Ошибка", e.what());
+                QMessageBox::critical(this, "Error", e.what());
                 return;
             }
             m_currentStep=0;
@@ -70,7 +79,7 @@ void AppWindow::onStartClicked() {
         }
         if (!m_steps.empty()) {
             m_timer->start(1000);
-            m_startBtn->setText("Пауза");
+            m_startBtn->setText("Pause");
         }
     }
 }
@@ -98,7 +107,7 @@ void AppWindow::onTimerTick() {
         m_visualizer->setStep(m_steps[m_currentStep]);
     } else {
         m_timer->stop();
-        m_startBtn->setText("Старт");
+        m_startBtn->setText("Start");
         m_steps.clear();
         m_currentStep = 0;
     }
@@ -106,7 +115,7 @@ void AppWindow::onTimerTick() {
 
 void AppWindow::resetState() {
     m_timer->stop();
-    m_startBtn->setText("Старт");
+    m_startBtn->setText("Start");
     m_currentStep = 0;
 
     auto array = m_inputWidget->getArray();
@@ -116,7 +125,7 @@ void AppWindow::resetState() {
         try {
             m_steps = generate_steps(array, sort_type);
         } catch (const std::invalid_argument& e) {
-            QMessageBox::critical(this, "Ошибка", e.what());
+            QMessageBox::critical(this, "Error", e.what());
             return;
         }
         m_descLabel->setText(QString::fromStdString(m_steps[m_currentStep].description));

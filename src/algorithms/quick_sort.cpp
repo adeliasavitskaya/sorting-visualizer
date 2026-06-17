@@ -20,7 +20,7 @@ int partition(std::vector<int>& arr, int l, int r, std::vector<SortStep>& steps)
 
     for (int j{l}; j < r; j++) {
         SortStep cmp = make_step(arr, l, r, i+1, j, ind_pvt, StepType::COMPARE,
-            "Сравниваем " + std::to_string(arr[j]) + " с опорным " + std::to_string(pvt));
+            "Comparing " + std::to_string(arr[j]) + " with pivot " + std::to_string(pvt));
         steps.push_back(cmp);
 
         if (arr[j] <= pvt) {
@@ -29,7 +29,7 @@ int partition(std::vector<int>& arr, int l, int r, std::vector<SortStep>& steps)
             std::swap(arr[i], arr[j]);
             if (i != j) {
                 SortStep s = make_step(arr, l, r, i, j, ind_pvt, StepType::SWAP,
-        "Меняем местами " + std::to_string(a) + " и " + std::to_string(b));
+        "Swapping " + std::to_string(a) + " and " + std::to_string(b));
                 steps.push_back(s);
             }
         }
@@ -39,7 +39,7 @@ int partition(std::vector<int>& arr, int l, int r, std::vector<SortStep>& steps)
     std::swap(arr[i+1], arr[ind_pvt]);
     if (i+1 != ind_pvt) {
         SortStep swap_pvt = make_step(arr, l, r, i+1, ind_pvt, ind_pvt, StepType::SWAP,
-            "Опорный " + std::to_string(pvt_val) + " встаёт на место " + std::to_string(i+1));
+            "Pivot " + std::to_string(pvt_val) + " moves to position " + std::to_string(i+1));
         steps.push_back(swap_pvt);
     }
     ind_pvt = i + 1;
@@ -59,7 +59,7 @@ void quick_sort_helper(std::vector<int>& array, std::vector<SortStep>& steps,
     if (l >= r) { return; }
 
     steps.push_back(make_step(array, l, r, -1, -1, r, StepType::FIND_PIVOT,
-        "Выбираем опорный элемент: " + std::to_string(array[r])));
+        "Choosing pivot element: " + std::to_string(array[r])));
 
     int p = partition(array, l, r, steps);
     quick_sort_helper(array, steps, l, p-1);
@@ -67,7 +67,7 @@ void quick_sort_helper(std::vector<int>& array, std::vector<SortStep>& steps,
 }
 
 std::vector<SortStep> quick_sort(const std::vector<int>& array) {
-    if (array.empty()) throw std::invalid_argument("Массив пустой");
+    if (array.empty()) throw std::invalid_argument("Array is empty");
     std::vector<SortStep> steps;
     std::vector arr = array;
     if (array.size() <= 1) {
@@ -76,6 +76,6 @@ std::vector<SortStep> quick_sort(const std::vector<int>& array) {
     }
     quick_sort_helper(arr, steps, 0, arr.size()-1);
     steps.push_back(make_step(arr, -1, -1, -1, -1, -1, StepType::DONE,
-        "Массив отсортирован!"));
+        "Array sorted!"));
     return steps;
 }
