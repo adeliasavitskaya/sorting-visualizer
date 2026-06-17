@@ -4,9 +4,11 @@
 #include <vector>
 #include "core/sort_step.h"
 
-///@brief Функция сортировка слиянием
-///@param array - массив чисел для сортировки
-///@return вектор шагов SortStep
+/// @brief Сортировка слиянием — публичный интерфейс
+/// @details Возвращает вектор шагов, каждый из которых содержит снимок
+/// массива и данные для визуализации. Исходный массив не изменяется.
+/// @param array Входной массив для сортировки
+/// @return Вектор шагов типа SortStep
 std::vector<SortStep> merge_sort(const std::vector<int>& array);
 
 #endif

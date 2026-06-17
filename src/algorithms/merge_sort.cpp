@@ -60,11 +60,6 @@ void merge_sort_helper(std::vector<int>& arr, int left, int right,
     merge(arr, left, mid, right, steps);
 }
 
-/// @brief Сортировка слиянием — публичный интерфейс
-/// @details Возвращает вектор шагов, каждый из которых содержит снимок
-/// массива и данные для визуализации. Исходный массив не изменяется.
-/// @param array Входной массив для сортировки
-/// @return Вектор шагов типа SortStep
 std::vector<SortStep> merge_sort(const std::vector<int>& array) {
     if (array.empty()) throw std::invalid_argument("Массив пустой");
     std::vector<int> arr = array;

@@ -66,11 +66,6 @@ void quick_sort_helper(std::vector<int>& array, std::vector<SortStep>& steps,
     quick_sort_helper(array, steps, p+1, r);
 }
 
-/// @brief Быстрая сортировка — публичный интерфейс
-/// @details Возвращает вектор шагов, каждый из которых содержит снимок
-/// массива и метаданные для визуализации. Исходный массив не изменяется.
-/// @param array Входной массив для сортировки
-/// @return Вектор шагов типа SortStep
 std::vector<SortStep> quick_sort(const std::vector<int>& array) {
     if (array.empty()) throw std::invalid_argument("Массив пустой");
     std::vector<SortStep> steps;

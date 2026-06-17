@@ -48,6 +48,8 @@ private:
 
     std::vector<SortStep> m_steps;   ///< Все шаги текущей сортировки
     int m_currentStep{0};            ///< Индекс текущего шага
+
+    /// @brief Сбрасывает состояние и перегенерирует шаги
     void resetState();
 };
 
