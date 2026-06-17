@@ -2,12 +2,6 @@
 #include "core/sort_step_utils.h"
 #include <stdexcept>
 
-/// @brief Сортировка пузырьком — публичный интерфейс
-/// @details На каждом проходе сравнивает соседние элементы и меняет их местами
-/// если левый больше правого. Записывает шаг COMPARE при каждом сравнении
-/// и шаг SWAP при каждом обмене. Исходный массив не изменяется.
-/// @param array Входной массив для сортировки
-/// @return Вектор шагов типа SortStep
 std::vector<SortStep> bubble_sort(const std::vector<int>& array) {
     if (array.empty()) throw std::invalid_argument("Массив не может быть пустым");
     std::vector<int> arr = array;

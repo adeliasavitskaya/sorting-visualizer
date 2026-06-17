@@ -8,7 +8,9 @@
 /// @param left Левая граница активного диапазона
 /// @param right Правая граница активного диапазона
 /// @param first, second активные элементы (сравниваемые или обмениваемые)
+/// @param pvt Индекс опорного элемента (-1 если не используется)
 /// @param type Тип шага (SPLIT, MERGE, DONE)
+/// @param description Текстовое описание шага для отображения пользователю
 /// @return Заполненный объект SortStep
 inline SortStep make_step(const std::vector<int>& arr=std::vector<int>{},
     int left=-1, int right=-1, int first=-1, int second=-1, int pvt=-1,

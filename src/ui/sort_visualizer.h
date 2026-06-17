@@ -4,6 +4,7 @@
 #include <QWidget>
 #include "core/sort_step.h"
 
+/// @brief Виджет визуализации сортировки в виде столбиков
 class SortVisualizer: public QWidget {
     Q_OBJECT
 
@@ -22,8 +23,8 @@ protected:
     void paintEvent(QPaintEvent* event);
 
 private:
-    SortStep m_step;  /// < текущий шаг для отображения
-    int m_maxVal{0};
+    SortStep m_step;  ///< текущий шаг для отображения
+    int m_maxVal{0};  ///< Максимальное значение массива для масштабирования столбиков
 };
 
 #endif
