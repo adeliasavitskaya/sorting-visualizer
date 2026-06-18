@@ -9,6 +9,16 @@ set(CMAKE_AUTOUIC ON)
 
 find_package(Qt5 REQUIRED COMPONENTS Widgets Core)
 
+set(CMAKE_POLICY_VERSION_MINIMUM 3.5)
+
+include(FetchContent)
+FetchContent_Declare(
+        doctest
+        GIT_REPOSITORY https://github.com/doctest/doctest.git
+        GIT_TAG v2.4.11
+)
+FetchContent_MakeAvailable(doctest)
+
 set(SOURCES
         src/main.cpp
         src/algorithms/bubble_sort.cpp
@@ -48,8 +58,8 @@ add_executable(tests
         src/core/step_generator.cpp
 )
 
-target_include_directories(tests PRIVATE src tests)
-target_link_libraries(tests Qt5::Widgets Qt5::Core)
+target_include_directories(tests PRIVATE src tests ${doctest_SOURCE_DIR}/doctest)
+target_link_libraries(tests Qt5::Widgets Qt5::Core doctest::doctest)
 
 enable_testing()
 add_test(NAME unit_tests COMMAND tests)

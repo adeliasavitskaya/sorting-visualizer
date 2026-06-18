@@ -9,7 +9,7 @@ ArrayInputWidget::ArrayInputWidget(QWidget* parent) : QWidget(parent) {
     m_randomBtn = new QPushButton("Random Array", this);
 
     m_sizeSpinBox = new QSpinBox(this);
-    m_sizeSpinBox->setRange(1, 30);
+    m_sizeSpinBox->setRange(1, 50);
     m_sizeSpinBox->setValue(20);
     m_sizeSpinBox->setButtonSymbols(QAbstractSpinBox::NoButtons);
 
@@ -81,6 +81,12 @@ std::vector<int> ArrayInputWidget::getArray() const {
 
 void ArrayInputWidget::onRandomClicked() {
     int randomCount = m_sizeSpinBox->value();
+    if (randomCount <= 0) {
+        randomCount = 1;
+        m_sizeSpinBox->blockSignals(true);
+        m_sizeSpinBox->setValue(1);
+        m_sizeSpinBox->blockSignals(false);
+    }
     std::ostringstream ss;
     for (int i{0}; i < randomCount; i++) {
         int n{rand() % 100 + 1};
