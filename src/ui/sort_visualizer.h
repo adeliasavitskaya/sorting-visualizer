@@ -2,13 +2,14 @@
 #define SORT_VISUALIZER_H
 
 #include <QWidget>
+
 #include "core/sort_step.h"
 
 /// @brief Виджет визуализации сортировки в виде столбиков
-class SortVisualizer: public QWidget {
+class SortVisualizer : public QWidget {
     Q_OBJECT
 
-public:
+   public:
     explicit SortVisualizer(QWidget* parent = nullptr);
 
     ///@brief Устанавливает текущий шаг для отрисовки
@@ -18,14 +19,14 @@ public:
     /// @brief Очищает визуализацию: сбрасывает текущий шаг и перерисовывает пустой холст
     void clear();
 
-protected:
+   protected:
     /// @brief Отрисовывает текущий шаг сортировки в виде столбиков
     /// @details Высота каждого столбика пропорциональна значению элемента,
     /// сравниваемые элементы выделяются цветом
     /// @param event Событие перерисовки от Qt (не используется напрямую)
     void paintEvent(QPaintEvent* event);
 
-private:
+   private:
     SortStep m_step;  ///< текущий шаг для отображения
     int m_maxVal{0};  ///< Максимальное значение массива для масштабирования столбиков
 };

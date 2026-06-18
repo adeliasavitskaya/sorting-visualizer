@@ -1,7 +1,9 @@
 #include "merge_sort.h"
+
+#include <stdexcept>
+
 #include "core/sort_step.h"
 #include "core/sort_step_utils.h"
-#include <stdexcept>
 
 /// @brief Сливает два отсортированных подмассива [left..mid] и [mid+1..right]
 /// @details Использует вспомогательный буфер temp. Записывает шаг MERGE
@@ -11,15 +13,15 @@
 /// @param mid Правая граница левого подмассива
 /// @param right Правая граница правого подмассива
 /// @param steps Вектор шагов для записи
-void merge(std::vector<int>& arr, int left, int mid, int right,
-           std::vector<SortStep>& steps) {
+void merge(std::vector<int>& arr, int left, int mid, int right, std::vector<SortStep>& steps) {
     std::vector<int> temp;
     int i{left}, j{mid + 1};
 
     while (i <= mid && j <= right) {
-        steps.push_back(make_step(arr, left, right, i, j,
-            /*pvt=*/-1, StepType::MERGE,
-            "Comparing " + std::to_string(arr[i]) + " and " + std::to_string(arr[j])));
+        steps.push_back(
+            make_step(arr, left, right, i, j,
+                      /*pvt=*/-1, StepType::MERGE,
+                      "Comparing " + std::to_string(arr[i]) + " and " + std::to_string(arr[j])));
         if (arr[i] < arr[j]) {
             temp.push_back(arr[i]);
             i++;
@@ -29,31 +31,38 @@ void merge(std::vector<int>& arr, int left, int mid, int right,
         }
     }
 
-    while (i <= mid)  { temp.push_back(arr[i]); i++; }
-    while (j <= right) { temp.push_back(arr[j]); j++; }
+    while (i <= mid) {
+        temp.push_back(arr[i]);
+        i++;
+    }
+    while (j <= right) {
+        temp.push_back(arr[j]);
+        j++;
+    }
 
     for (int k{left}; k <= right; k++) {
         arr[k] = temp[k - left];
-        steps.push_back(make_step(arr, left, right, k, -1, -1, StepType::MERGE,
+        steps.push_back(make_step(
+            arr, left, right, k, -1, -1, StepType::MERGE,
             "Merging: element " + std::to_string(arr[k]) + " into position " + std::to_string(k)));
     }
 }
 
 /// @brief Рекурсивный помощник сортировки слиянием
 /// @details Делит диапазон пополам (шаг SPLIT), рекурсивно сортирует
-///каждую половину, затем сливает их обратно.
+/// каждую половину, затем сливает их обратно.
 /// @param arr Массив для сортировки (изменяется на месте)
 /// @param left Левая граница текущего диапазона
 /// @param right Правая граница текущего диапазона
 /// @param steps Вектор шагов для записи
-void merge_sort_helper(std::vector<int>& arr, int left, int right,
-                       std::vector<SortStep>& steps) {
-    if (left >= right) { return; }
+void merge_sort_helper(std::vector<int>& arr, int left, int right, std::vector<SortStep>& steps) {
+    if (left >= right) {
+        return;
+    }
 
     int mid = (right - left) / 2 + left;
-    steps.push_back(make_step(arr, left, right, left, mid+1,
-        /*pvt=*/-1, StepType::SPLIT,
-        "Splitting array into two halves"));
+    steps.push_back(make_step(arr, left, right, left, mid + 1,
+                              /*pvt=*/-1, StepType::SPLIT, "Splitting array into two halves"));
 
     merge_sort_helper(arr, left, mid, steps);
     merge_sort_helper(arr, mid + 1, right, steps);
@@ -71,7 +80,6 @@ std::vector<SortStep> merge_sort(const std::vector<int>& array) {
     }
 
     merge_sort_helper(arr, 0, arr.size() - 1, steps);
-    steps.push_back(make_step(arr, -1, -1, -1, -1, -1, StepType::DONE,
-        "Array sorted!"));
+    steps.push_back(make_step(arr, -1, -1, -1, -1, -1, StepType::DONE, "Array sorted!"));
     return steps;
 }

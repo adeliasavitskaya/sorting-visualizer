@@ -12,10 +12,9 @@
 /// @param type Тип шага (SPLIT, MERGE, DONE)
 /// @param description Текстовое описание шага для отображения пользователю
 /// @return Заполненный объект SortStep
-inline SortStep make_step(const std::vector<int>& arr=std::vector<int>{},
-    int left=-1, int right=-1, int first=-1, int second=-1, int pvt=-1,
-    StepType type=StepType::DONE, std::string description="")
-{
+inline SortStep make_step(const std::vector<int>& arr = std::vector<int>{}, int left = -1,
+                          int right = -1, int first = -1, int second = -1, int pvt = -1,
+                          StepType type = StepType::DONE, std::string description = "") {
     SortStep step;
     step.array = arr;
     step.left = left;

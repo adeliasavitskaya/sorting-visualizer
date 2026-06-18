@@ -1,13 +1,15 @@
 #include "app_window.h"
+
 #include <QHBoxLayout>
-#include <QVBoxLayout>
 #include <QMessageBox>
+#include <QVBoxLayout>
+
 #include "core/step_generator.h"
 
-AppWindow::AppWindow(QWidget *parent) : QMainWindow(parent) {
+AppWindow::AppWindow(QWidget* parent) : QMainWindow(parent) {
     m_startBtn = new QPushButton("Start", this);
-    m_nextBtn  = new QPushButton("Next", this);
-    m_prevBtn  = new QPushButton("Back", this);
+    m_nextBtn = new QPushButton("Next", this);
+    m_prevBtn = new QPushButton("Back", this);
     m_algoBox = new QComboBox(this);
     m_algoBox->addItem("Bubble");
     m_algoBox->addItem("Merge");
@@ -35,7 +37,7 @@ AppWindow::AppWindow(QWidget *parent) : QMainWindow(parent) {
     mainLayout->addWidget(m_visualizer);
 
     connect(m_inputWidget, &ArrayInputWidget::arrayReady, this,
-        [this](const std::vector<int>&) {resetState();});
+            [this](const std::vector<int>&) { resetState(); });
 
     connect(m_inputWidget, &ArrayInputWidget::cleared, this, [this]() {
         m_timer->stop();
@@ -48,20 +50,19 @@ AppWindow::AppWindow(QWidget *parent) : QMainWindow(parent) {
 
     connect(m_startBtn, &QPushButton::clicked, this, &AppWindow::onStartClicked);
     connect(m_nextBtn, &QPushButton::clicked, this, &AppWindow::onNextClicked);
-    connect(m_prevBtn,  &QPushButton::clicked, this, &AppWindow::onPrevClicked);
+    connect(m_prevBtn, &QPushButton::clicked, this, &AppWindow::onPrevClicked);
 
     connect(m_timer, &QTimer::timeout, this, &AppWindow::onTimerTick);
 
-    connect(m_algoBox, QOverload<int>::of(&QComboBox::currentIndexChanged),
-        this, &AppWindow::resetState);
+    connect(m_algoBox, QOverload<int>::of(&QComboBox::currentIndexChanged), this,
+            &AppWindow::resetState);
 }
 
 void AppWindow::onStartClicked() {
     if (m_timer->isActive()) {
         m_timer->stop();
         m_startBtn->setText("Start");
-    }
-    else {
+    } else {
         if (m_steps.empty()) {
             auto array = m_inputWidget->getArray();
             if (array.empty()) return;
@@ -74,7 +75,7 @@ void AppWindow::onStartClicked() {
                 QMessageBox::critical(this, "Error", e.what());
                 return;
             }
-            m_currentStep=0;
+            m_currentStep = 0;
             m_visualizer->setStep(m_steps[m_currentStep]);
         }
         if (!m_steps.empty()) {

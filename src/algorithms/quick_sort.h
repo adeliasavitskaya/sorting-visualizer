@@ -2,6 +2,7 @@
 #define SRC_ALGORITHMS_QUICK_SORT_HPP_
 
 #include <vector>
+
 #include "core/sort_step.h"
 
 /// @brief Быстрая сортировка — публичный интерфейс

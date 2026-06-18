@@ -2,6 +2,7 @@
 #define SRC_ALGORITHMS_MERGE_SORT_HPP_
 
 #include <vector>
+
 #include "core/sort_step.h"
 
 /// @brief Сортировка слиянием — публичный интерфейс

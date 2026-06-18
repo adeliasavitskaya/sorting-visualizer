@@ -1,7 +1,8 @@
+#include <stdexcept>
 #include <vector>
+
 #include "core/sort_step.h"
 #include "core/sort_step_utils.h"
-#include <stdexcept>
 
 /// @brief Разбивает подмассив [l..r] на две части по схеме Ломуто
 /// @details Pivot — правый элемент arr[r]. После выполнения pivot стоит
@@ -19,8 +20,9 @@ int partition(std::vector<int>& arr, int l, int r, std::vector<SortStep>& steps)
     int i{l - 1};
 
     for (int j{l}; j < r; j++) {
-        SortStep cmp = make_step(arr, l, r, i+1, j, ind_pvt, StepType::COMPARE,
-            "Comparing " + std::to_string(arr[j]) + " with pivot " + std::to_string(pvt));
+        SortStep cmp =
+            make_step(arr, l, r, i + 1, j, ind_pvt, StepType::COMPARE,
+                      "Comparing " + std::to_string(arr[j]) + " with pivot " + std::to_string(pvt));
         steps.push_back(cmp);
 
         if (arr[j] <= pvt) {
@@ -28,18 +30,20 @@ int partition(std::vector<int>& arr, int l, int r, std::vector<SortStep>& steps)
             int a{arr[i]}, b{arr[j]};
             std::swap(arr[i], arr[j]);
             if (i != j) {
-                SortStep s = make_step(arr, l, r, i, j, ind_pvt, StepType::SWAP,
-        "Swapping " + std::to_string(a) + " and " + std::to_string(b));
+                SortStep s =
+                    make_step(arr, l, r, i, j, ind_pvt, StepType::SWAP,
+                              "Swapping " + std::to_string(a) + " and " + std::to_string(b));
                 steps.push_back(s);
             }
         }
     }
 
     int pvt_val{arr[ind_pvt]};
-    std::swap(arr[i+1], arr[ind_pvt]);
-    if (i+1 != ind_pvt) {
-        SortStep swap_pvt = make_step(arr, l, r, i+1, ind_pvt, ind_pvt, StepType::SWAP,
-            "Pivot " + std::to_string(pvt_val) + " moves to position " + std::to_string(i+1));
+    std::swap(arr[i + 1], arr[ind_pvt]);
+    if (i + 1 != ind_pvt) {
+        SortStep swap_pvt = make_step(
+            arr, l, r, i + 1, ind_pvt, ind_pvt, StepType::SWAP,
+            "Pivot " + std::to_string(pvt_val) + " moves to position " + std::to_string(i + 1));
         steps.push_back(swap_pvt);
     }
     ind_pvt = i + 1;
@@ -54,16 +58,17 @@ int partition(std::vector<int>& arr, int l, int r, std::vector<SortStep>& steps)
 /// @param steps Вектор шагов для записи
 /// @param l Левая граница текущего диапазона
 /// @param r Правая граница текущего диапазона
-void quick_sort_helper(std::vector<int>& array, std::vector<SortStep>& steps,
-    int l, int r) {
-    if (l >= r) { return; }
+void quick_sort_helper(std::vector<int>& array, std::vector<SortStep>& steps, int l, int r) {
+    if (l >= r) {
+        return;
+    }
 
     steps.push_back(make_step(array, l, r, -1, -1, r, StepType::FIND_PIVOT,
-        "Choosing pivot element: " + std::to_string(array[r])));
+                              "Choosing pivot element: " + std::to_string(array[r])));
 
     int p = partition(array, l, r, steps);
-    quick_sort_helper(array, steps, l, p-1);
-    quick_sort_helper(array, steps, p+1, r);
+    quick_sort_helper(array, steps, l, p - 1);
+    quick_sort_helper(array, steps, p + 1, r);
 }
 
 std::vector<SortStep> quick_sort(const std::vector<int>& array) {
@@ -74,8 +79,7 @@ std::vector<SortStep> quick_sort(const std::vector<int>& array) {
         steps.push_back(make_step(arr, -1, -1, -1, -1, -1, StepType::DONE));
         return steps;
     }
-    quick_sort_helper(arr, steps, 0, arr.size()-1);
-    steps.push_back(make_step(arr, -1, -1, -1, -1, -1, StepType::DONE,
-        "Array sorted!"));
+    quick_sort_helper(arr, steps, 0, arr.size() - 1);
+    steps.push_back(make_step(arr, -1, -1, -1, -1, -1, StepType::DONE, "Array sorted!"));
     return steps;
 }

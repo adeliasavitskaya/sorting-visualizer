@@ -2,6 +2,7 @@
 #define STEP_GENERATOR_H
 
 #include <vector>
+
 #include "core/sort_step.h"
 
 /// @brief Делегирует вызов нужному алгоритму в зависимости от типа

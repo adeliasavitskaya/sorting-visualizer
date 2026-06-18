@@ -1,4 +1,5 @@
 #include "array_input_widget.h"
+
 #include <QHBoxLayout>
 #include <sstream>
 
@@ -25,13 +26,12 @@ ArrayInputWidget::ArrayInputWidget(QWidget* parent) : QWidget(parent) {
     layout->addWidget(m_input);
     layout->addWidget(m_clearBtn);
 
-    connect(m_input, &QLineEdit::textChanged, this, [this] (const QString& text) {
+    connect(m_input, &QLineEdit::textChanged, this, [this](const QString& text) {
         std::vector<int> arr;
         if (validate(text, arr)) {
             m_input->setStyleSheet("");
             emit arrayReady(arr);
-        }
-        else if (!text.isEmpty()) {
+        } else if (!text.isEmpty()) {
             m_input->setStyleSheet("background-color: pink; border: 2px solid red;");
 
             QTimer::singleShot(400, this, [this]() {
@@ -45,7 +45,7 @@ ArrayInputWidget::ArrayInputWidget(QWidget* parent) : QWidget(parent) {
         }
     });
     connect(m_sizeSpinBox, QOverload<int>::of(&QSpinBox::valueChanged), this,
-        [this]() {onRandomClicked();});
+            [this]() { onRandomClicked(); });
     connect(m_randomBtn, &QPushButton::clicked, this, &ArrayInputWidget::onRandomClicked);
 
     connect(m_clearBtn, &QPushButton::clicked, this, [this]() {

@@ -1,10 +1,9 @@
 #include "sort_visualizer.h"
+
 #include <QPainter>
 #include <algorithm>
 
-SortVisualizer::SortVisualizer(QWidget* parent) : QWidget(parent) {
-    setMinimumSize(400, 300);
-}
+SortVisualizer::SortVisualizer(QWidget* parent) : QWidget(parent) { setMinimumSize(400, 300); }
 
 void SortVisualizer::setStep(const SortStep& step) {
     if (!step.array.empty()) {
@@ -34,8 +33,7 @@ void SortVisualizer::paintEvent(QPaintEvent* event) {
     if (m_step.left >= 0 && m_step.right >= 0) {
         int x1 = m_step.left * barWidth;
         int x2 = (m_step.right + 1) * barWidth;
-        painter.fillRect(x1, 0, x2 - x1, height() - bottomPadding,
-                         QColor("#2a2a3e"));
+        painter.fillRect(x1, 0, x2 - x1, height() - bottomPadding, QColor("#2a2a3e"));
     }
 
     for (int i{0}; i < n; i++) {
@@ -49,22 +47,18 @@ void SortVisualizer::paintEvent(QPaintEvent* event) {
 
         if (m_step.type == StepType::MERGE || m_step.type == StepType::SPLIT) {
             int mid = (m_step.left + m_step.right) / 2;
-            if (i >= m_step.left && i <= mid)
-                color = QColor("#c678dd");
-            if (i > mid && i <= m_step.right)
-                color = QColor("#e5c07b");
+            if (i >= m_step.left && i <= mid) color = QColor("#c678dd");
+            if (i > mid && i <= m_step.right) color = QColor("#e5c07b");
         }
 
-        if (m_step.pivot >= 0 && i == m_step.pivot)
-            color = QColor("#98c379");
+        if (m_step.pivot >= 0 && i == m_step.pivot) color = QColor("#98c379");
 
         if (m_step.type == StepType::SWAP) {
-            if (i == m_step.first || i == m_step.second)
-                color = QColor("#e06c75");
+            if (i == m_step.first || i == m_step.second) color = QColor("#e06c75");
         }
 
-        if (m_step.type == StepType::MERGE &&
-            m_step.first >= 0 && m_step.second == -1 && i == m_step.first) {
+        if (m_step.type == StepType::MERGE && m_step.first >= 0 && m_step.second == -1 &&
+            i == m_step.first) {
             color = QColor("#e06c75");
         }
 
@@ -76,13 +70,11 @@ void SortVisualizer::paintEvent(QPaintEvent* event) {
             }
         }
 
-        if (m_step.type == StepType::DONE)
-            color = QColor("#98c379");
+        if (m_step.type == StepType::DONE) color = QColor("#98c379");
 
         painter.setBrush(color);
         painter.setPen(highlight ? QPen(QColor("#ffffff"), 2) : Qt::NoPen);
-        painter.drawRect(x + padding + 1, y + 1,
-                         barWidth - padding * 2 - 2, barHeight - 2);
+        painter.drawRect(x + padding + 1, y + 1, barWidth - padding * 2 - 2, barHeight - 2);
 
         painter.setPen(QColor("#abb2bf"));
         painter.drawText(x + padding, height() - 5, QString::number(m_step.array[i]));

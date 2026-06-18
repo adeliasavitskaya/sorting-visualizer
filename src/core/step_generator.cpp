@@ -1,8 +1,9 @@
 #include <stdexcept>
-#include "core/sort_step.h"
+
 #include "algorithms/bubble_sort.h"
 #include "algorithms/merge_sort.h"
 #include "algorithms/quick_sort.h"
+#include "core/sort_step.h"
 
 std::vector<SortStep> generate_steps(const std::vector<int>& array, SortType type) {
     switch (type) {

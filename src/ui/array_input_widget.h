@@ -1,12 +1,12 @@
 #ifndef ARRAY_INPUT_WIDGET_H
 #define ARRAY_INPUT_WIDGET_H
 
-#include <QTimer>
-#include <QLineEdit>
+#include <QAbstractSpinBox>
 #include <QLabel>
+#include <QLineEdit>
 #include <QPushButton>
 #include <QSpinBox>
-#include <QAbstractSpinBox>
+#include <QTimer>
 #include <vector>
 
 /// @brief Виджет ввода массива для визуализатора сортировок
@@ -16,7 +16,7 @@
 class ArrayInputWidget : public QWidget {
     Q_OBJECT
 
-public:
+   public:
     /// @brief Конструктор виджета
     /// @param parent Родительский виджет
     explicit ArrayInputWidget(QWidget* parent = nullptr);
@@ -26,26 +26,26 @@ public:
     /// @return Вектор целых чисел или пустой вектор при ошибке
     std::vector<int> getArray() const;
 
-    signals:
-        /// @brief Сигнал — массив введён корректно и готов к сортировке
-            /// @param array Валидный массив целых чисел
-        void arrayReady(const std::vector<int>& array);
+   signals:
+    /// @brief Сигнал — массив введён корректно и готов к сортировке
+    /// @param array Валидный массив целых чисел
+    void arrayReady(const std::vector<int>& array);
 
-        /// @brief Сигнал — поле ввода полностью очищено пользователем
-        void cleared();
+    /// @brief Сигнал — поле ввода полностью очищено пользователем
+    void cleared();
 
-private slots:
+   private slots:
     /// @brief Слот — генерирует случайный массив и вставляет в поле ввода
     void onRandomClicked();
 
-private:
-    QLineEdit*   m_input;      ///< Поле ввода чисел через пробел
+   private:
+    QLineEdit* m_input;        ///< Поле ввода чисел через пробел
     QPushButton* m_randomBtn;  ///< Кнопка генерации случайного массива
     QSpinBox* m_sizeSpinBox;   /// < СпинБокс для выбора размера массива
-    QLabel* m_sizeLabel; /// < Лабл для надписи с размером массива
-    QPushButton* m_clearBtn; /// < Кнопка для очистки поля с числами
+    QLabel* m_sizeLabel;       /// < Лабл для надписи с размером массива
+    QPushButton* m_clearBtn;   /// < Кнопка для очистки поля с числами
 
-    mutable QString m_lastValidText; /// < Последний валидный текст
+    mutable QString m_lastValidText;  /// < Последний валидный текст
 
     /// @brief Проверяет строку ввода и парсит числа
     /// @details Разбивает строку по пробелам, проверяет что каждый элемент

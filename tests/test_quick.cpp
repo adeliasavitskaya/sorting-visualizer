@@ -1,7 +1,8 @@
-#include "doctest.h"
+#include <stdexcept>
+
 #include "algorithms/quick_sort.h"
 #include "core/sort_step.h"
-#include <stdexcept>
+#include "doctest.h"
 
 TEST_CASE("quick_sort basic") {
     SUBCASE("unsorted array") {
@@ -40,16 +41,14 @@ TEST_CASE("quick_sort steps") {
     SUBCASE("all steps have valid array size") {
         std::vector<int> arr{5, 3, 1, 4, 2};
         auto steps = quick_sort(arr);
-        CHECK(std::all_of(steps.begin(), steps.end(), [&arr](const auto& step) {
-            return step.array.size() == arr.size();
-        }));
+        CHECK(std::all_of(steps.begin(), steps.end(),
+                          [&arr](const auto& step) { return step.array.size() == arr.size(); }));
     }
     SUBCASE("steps contain FIND_PIVOT type") {
         std::vector<int> arr{5, 3, 1, 4, 2};
         auto steps = quick_sort(arr);
-        CHECK(std::any_of(steps.begin(), steps.end(), [](const SortStep& s) {
-            return s.type == StepType::FIND_PIVOT;
-        }));
+        CHECK(std::any_of(steps.begin(), steps.end(),
+                          [](const SortStep& s) { return s.type == StepType::FIND_PIVOT; }));
     }
     SUBCASE("last step is DONE") {
         std::vector<int> arr{5, 3, 1, 4, 2};

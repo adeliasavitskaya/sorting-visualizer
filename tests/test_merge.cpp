@@ -1,7 +1,8 @@
-#include "doctest.h"
+#include <stdexcept>
+
 #include "../src/algorithms/merge_sort.h"
 #include "core/sort_step.h"
-#include <stdexcept>
+#include "doctest.h"
 
 TEST_CASE("merge_sort basic") {
     SUBCASE("unsorted array") {
@@ -41,13 +42,13 @@ TEST_CASE("merge_sort steps") {
         std::vector<int> arr{3, 2, 1};
         auto steps = merge_sort(arr);
         CHECK(std::any_of(begin(steps), end(steps),
-            [](const SortStep& s) {return s.type == StepType::SPLIT;}));
+                          [](const SortStep& s) { return s.type == StepType::SPLIT; }));
     }
     SUBCASE("steps contain MERGE type") {
         std::vector<int> arr{3, 2, 1};
         auto steps = merge_sort(arr);
-        CHECK(std::any_of(steps.begin(), steps.end(), [](const SortStep& s) {
-            return s.type == StepType::MERGE;}));
+        CHECK(std::any_of(steps.begin(), steps.end(),
+                          [](const SortStep& s) { return s.type == StepType::MERGE; }));
     }
     SUBCASE("last step is DONE") {
         std::vector<int> arr{3, 2, 1};

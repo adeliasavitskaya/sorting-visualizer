@@ -1,6 +1,7 @@
 #ifndef BUBBLE_SORT_H
 #define BUBBLE_SORT_H
 #include <vector>
+
 #include "core/sort_step.h"
 
 /// @brief Сортировка пузырьком — публичный интерфейс

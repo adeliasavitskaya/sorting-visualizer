@@ -1,5 +1,5 @@
-#include "doctest.h"
 #include "core/step_generator.h"
+#include "doctest.h"
 
 TEST_CASE("generate_steps") {
     std::vector<int> arr = {3, 1, 2};

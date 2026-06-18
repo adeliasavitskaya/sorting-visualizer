@@ -1,7 +1,8 @@
 #define DOCTEST_CONFIG_IMPLEMENT_WITH_MAIN
-#include "doctest.h"
-#include "../src/algorithms/bubble_sort.h"
 #include <stdexcept>
+
+#include "../src/algorithms/bubble_sort.h"
+#include "doctest.h"
 
 TEST_CASE("bubble_sort basic") {
     SUBCASE("unsorted array") {
@@ -40,16 +41,14 @@ TEST_CASE("bubble_sort steps") {
     SUBCASE("steps contain COMPARE type") {
         std::vector<int> arr{3, 1, 2};
         auto steps = bubble_sort(arr);
-        CHECK(std::any_of(steps.begin(), steps.end(), [](const SortStep& s) {
-            return s.type == StepType::COMPARE;
-        }));
+        CHECK(std::any_of(steps.begin(), steps.end(),
+                          [](const SortStep& s) { return s.type == StepType::COMPARE; }));
     }
     SUBCASE("steps contain SWAP type") {
         std::vector<int> arr{3, 1, 2};
         auto steps = bubble_sort(arr);
-        CHECK(std::any_of(steps.begin(), steps.end(), [](const SortStep& s) {
-            return s.type == StepType::SWAP;
-        }));
+        CHECK(std::any_of(steps.begin(), steps.end(),
+                          [](const SortStep& s) { return s.type == StepType::SWAP; }));
     }
     SUBCASE("last step is DONE") {
         std::vector<int> arr{3, 1, 2};

@@ -23,8 +23,6 @@
 
 ## Как это выглядит
 
-## Визуализация алгоритмов сортировки
-
 ### Пузырьковая сортировка (Bubble Sort)
 
 На каждом шаге выделяется сравниваемая пара элементов:
@@ -66,6 +64,7 @@
 После завершения работы любого алгоритма итоговый отсортированный массив подсвечивается зелёным:
 
 ![Массив отсортирован](images/sorted_done.png)
+
 ### Цветовая легенда визуализатора
 
 | Цвет | Значение |
@@ -86,13 +85,18 @@
 - Qt5 (модули Widgets и Core).
 - Doctest подключается автоматически через `FetchContent` при первой сборке тестов — устанавливать отдельно не нужно, но потребуется доступ в интернет на этапе конфигурации CMake.
 
-На macOS Qt5 можно установить через Homebrew:
+Установка Qt5 и CMake отличается по операционным системам — выберите свою ниже.
+
+<details>
+<summary><b>macOS</b></summary>
+
+Qt5 и CMake можно установить через Homebrew:
 
 ```bash
 brew install qt@5 cmake
 ```
 
-### Сборка
+Сборка:
 
 ```bash
 git clone https://github.com/adeliasavitskaya/sorting-visualizer.git
@@ -102,7 +106,61 @@ cmake .. -DCMAKE_PREFIX_PATH=$(brew --prefix qt@5)
 cmake --build .
 ```
 
-Флаг `-DCMAKE_PREFIX_PATH` нужен, если Qt5 установлен через Homebrew и не находится автоматически. Если Qt5 уже виден CMake (например, установлен через официальный онлайн-инсталлятор с настроенными переменными окружения), флаг можно не указывать.
+Флаг `-DCMAKE_PREFIX_PATH` нужен, если Qt5 установлен через Homebrew и не находится автоматически.
+
+</details>
+
+<details>
+<summary><b>Linux (Ubuntu/Debian)</b></summary>
+
+Установка зависимостей:
+
+```bash
+sudo apt update
+sudo apt install build-essential cmake qtbase5-dev qt5-qmake
+```
+
+На некоторых дистрибутивах пакет CMake в репозиториях устаревший — при необходимости поставьте более новую версию вручную или через `pip install cmake`.
+
+Сборка:
+
+```bash
+git clone https://github.com/adeliasavitskaya/sorting-visualizer.git
+cd sorting-visualizer
+mkdir build && cd build
+cmake ..
+cmake --build .
+```
+
+На Linux Qt5, установленный из системных пакетов, обычно находится автоматически — указывать `CMAKE_PREFIX_PATH` не требуется.
+
+</details>
+
+<details>
+<summary><b>Windows</b></summary>
+
+Потребуются:
+
+- [Qt5](https://www.qt.io/download-qt-installer) (через онлайн-инсталлятор Qt, выбрать компонент Qt 5.x для вашего компилятора — например, MSVC 2019 64-bit).
+- [CMake](https://cmake.org/download/).
+- Компилятор: Visual Studio (с компонентом «Desktop development with C++») либо MinGW, поставляемый вместе с Qt.
+
+Сборка из PowerShell или Developer Command Prompt for VS:
+
+```powershell
+git clone https://github.com/adeliasavitskaya/sorting-visualizer.git
+cd sorting-visualizer
+mkdir build
+cd build
+cmake .. -DCMAKE_PREFIX_PATH="C:\Qt\5.15.2\msvc2019_64"
+cmake --build . --config Release
+```
+
+Путь в `CMAKE_PREFIX_PATH` нужно заменить на тот, куда установлен Qt5 на вашем компьютере (зависит от версии Qt и выбранного компилятора при установке).
+
+При запуске собранного `.exe` файла напрямую (не из терминала) может потребоваться, чтобы DLL-библиотеки Qt были доступны в `PATH`, либо нужно скопировать их рядом с исполняемым файлом (см. инструмент `windeployqt`, входящий в состав Qt).
+
+</details>
 
 В результате сборки появятся два исполняемых файла: `sorting-visualizer` (само приложение) и `tests` (тестовый набор).
 
@@ -113,6 +171,8 @@ cmake --build .
 ```bash
 ./sorting-visualizer
 ```
+
+На Windows — `sorting-visualizer.exe` (находится в подпапке `Release` или `Debug` внутри каталога сборки, если использовался многоконфигурационный генератор, например Visual Studio).
 
 ## Использование
 
@@ -127,12 +187,18 @@ cmake --build .
 
 ## Тесты
 
-Тесты написаны с использованием [doctest](https://github.com/doctest/doctest) и покрывают все три алгоритма сортировки, а также единую точку входа `generate_steps`. Для каждого алгоритма проверяются как корректность результата (отсортированный массив, граничные случаи — пустой массив, один элемент, дубликаты, уже отсортированный и обратно отсортированный массив), так и состав сгенерированных шагов (наличие нужных типов шагов, корректное завершение).
+Тесты написаны с использованием [doctest](https://github.com/doctest/doctest) и покрывают все три алгоритма сортировки, а также единую точку входа `generate_steps`.
 
-Запуск тестов из каталога сборки:
+Запуск тестов из каталога сборки (на всех платформах команда одна и та же):
 
 ```bash
 ctest
+```
+
+На Windows с многоконфигурационным генератором (Visual Studio) может потребоваться указать конфигурацию:
+
+```powershell
+ctest -C Release
 ```
 
 Либо напрямую через исполняемый файл, с более подробным выводом:
@@ -143,13 +209,15 @@ ctest
 
 ## Документация кода
 
-Документация в формате Doxygen сгенерирована в каталог `docs/`. Чтобы собрать её заново после изменений в коде:
+Документация в формате Doxygen сгенерирована в каталог `docs/`. Чтобы собрать её заново после изменений в коде, выполните из корня репозитория:
 
 ```bash
 doxygen Doxyfile
 ```
 
-Команда запускается из корня репозитория. Результат — HTML-документация в `docs/html/`, откуда можно открыть `index.html` в браузере.
+Doxygen для Windows можно скачать [здесь](https://www.doxygen.nl/download.html), для Linux — установить через `sudo apt install doxygen`, для macOS — `brew install doxygen`.
+
+Результат — HTML-документация в `docs/html/`. Откройте файл `docs/html/index.html` в любом браузере.
 
 ## Структура проекта
 
